@@ -1,4 +1,8 @@
-#!/usr/bin/env node
+// env
+require('dotenv').config();
+const {PORT} = process.env;
+
+// import
 let app = require('../app');
 let debug = require('debug')('dashboard:server');
 let http = require('http');
@@ -6,7 +10,7 @@ let http = require('http');
 /**
  * Get port from environment and store in Express.
  */
-let port = normalizePort(process.env.PORT || '8080');
+let port = normalizePort(PORT || '8080');
 app.set('port', port);
 
 /**
