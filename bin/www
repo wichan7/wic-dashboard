@@ -4,7 +4,8 @@ const {PORT} = process.env;
 
 // import
 let app = require('../app');
-let debug = require('debug')('dashboard:server');
+let debugI = require('debug')('www:inform');
+let debugE = require('debug')('www:error');
 let http = require('http');
 
 /**
@@ -77,5 +78,5 @@ function onListening() {
   let bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  debugI('Listening on ' + bind);
 }

@@ -4,6 +4,9 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 
+let debugI = require('debug')('www:inform');
+let debugE = require('debug')('www:error');
+
 let indexRouter = require('./routes/index');
 let authRouter = require('./routes/auth');
 let dashboardRouter = require('./routes/dashboard');
