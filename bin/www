@@ -1,12 +1,10 @@
-// env
 require('dotenv').config();
 const {PORT} = process.env;
 
 // import
 let app = require('../app');
-let debugI = require('debug')('www:inform');
-let debugE = require('debug')('www:error');
 let http = require('http');
+let logger = require('../utils/logger');
 
 /**
  * Get port from environment and store in Express.
@@ -60,10 +58,10 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      logger.error(bind + ' requires elevated privileges');
       process.exit(1);
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      logger.error(bind + ' is already in use');
       process.exit(1);
     default:
       throw error;
@@ -78,5 +76,5 @@ function onListening() {
   let bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debugI('Listening on ' + bind);
+  logger.info('Listening on ' + bind);
 }
