@@ -1,10 +1,10 @@
-# WIC-APP
+# WIC-Dashboard
 ## 개요
-wic-APP 서버입니다. wic-app-react의 html을 배포합니다.
+wic-dashboard 서버입니다. wic-app-react의 html을 배포합니다.
 
 ## Directory Structure
 ```
-wic-app
+wic-dashboard
 ├─ .dockerignore
 ├─ .gitignore
 ├─ app.js
