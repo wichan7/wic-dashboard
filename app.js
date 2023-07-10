@@ -23,6 +23,11 @@ app.use(cors());
 /* public 폴더 지정 */
 app.use(express.static(path.join(__dirname, 'public')));
 
+/* health check */
+app.use('/healthz', (req, res, next) => {
+  res.status(200).send("dashboard ok");
+});
+
 /* route 설정 */
 app.use('/api', apiRoutes);
 app.use('/*', viewRoutes);
