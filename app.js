@@ -2,16 +2,18 @@
 require('dotenv').config();
 // import
 const express = require('express');
+const app = express();
 const path = require('path');
-const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-const logger = require('./utils/logger');
 const cors = require('cors');
+const logger = require('./utils/logger');
+const mongoose = require('mongoose');
+//api
+const login = require('./routes/login');
+const join = require('./routes/join');
 // define routes
-let apiRoutes = require('./routes/api');
 let viewRoutes = require('./routes/view');
-let app = express();
 // logger
 app.use(morgan('dev'));
 // express extentions
@@ -29,7 +31,8 @@ app.use('/healthz', (req, res, next) => {
 });
 
 /* route 설정 */
-app.use('/api', apiRoutes);
+app.use('/api/login', login);
+app.use('/api/join', join);
 app.use('/*', viewRoutes);
 
 // catch 404 and forward to error handler
