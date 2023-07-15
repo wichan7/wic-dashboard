@@ -53,7 +53,7 @@ router.post('/join', async function(req, res, next) {
     // HASHING
     const hashedPassword = CryptoJS.SHA256(password + process.env.HASH_SALT).toString();
     // CREATE
-    await User.create({ userId, password })
+    await User.create({ userId, hashedPassword })
     .then( user => result = SUCCESS_CREATE )
     .catch( err => {
       if (err.code == 11000) {
