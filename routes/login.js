@@ -5,6 +5,7 @@ const router = express.Router();
 // utils
 const logger = require('../utils/logger');
 const status = require('../utils/httpStatus');
+const CryptoJS = require('crypto-js');
 // model
 const User = require('../models/user');
 const cookie = require('cookie');
@@ -12,7 +13,8 @@ const jwtApi = require('../utils/jwtApi');
 
 // 로그인
 router.post('/', async function(req, res, next) {
-  const { userId, password } = req.body;
+  const userId = req.body.userId;
+  const password = CryptoJS.SHA256(req.body.password + process.env.HASH_SALT).toString();
   let result = status.UNEXPECTED_ERROR;
 
   var cookies = {};
