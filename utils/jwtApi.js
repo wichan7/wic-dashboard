@@ -100,7 +100,7 @@ exports.createJwtAccessToken = (userId) => {
     }, process.env.SECRET_KEY, {
         expiresIn: '30m',
         issuer: 'kgginam'
-    })
+    });
 
     return token;
 };
@@ -113,7 +113,7 @@ exports.createJwtRefreshToken = (userId) => {
     }, process.env.REFRESH_SECRET_KEY, {
         expiresIn: '7d',
         issuer: 'kgginam'
-    })
+    });
 
     return token;
 };
