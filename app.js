@@ -21,7 +21,10 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 
 /* public 폴더 지정 */
 app.use(express.static(path.join(__dirname, 'public')));
