@@ -43,7 +43,7 @@ router.post('/', async function(req, res, next) {
   
   res.cookie('token', token, jwtApi.COOKIE_OPTIONS);
   res.cookie('userId', userId, jwtApi.COOKIE_OPTIONS);
-  res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, maxAge: jwtApi.COOKIE_MAX_LIFE_REFRESH, path: '/' });
+  res.cookie('refreshToken', refreshToken, jwtApi.COOKIE_REFRESH_OPTIONS);
 
   return res.status(result.code).send({
     code: result.code,

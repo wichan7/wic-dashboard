@@ -36,6 +36,10 @@ app.post('/refresh', (req, res, next) => {
   return jwtApi.checkRefreshTokenSignature(req, res, next);
 });
 
+app.post('/verify', (req, res, next) => {
+  return jwtApi.checkTokenSignature(req, res, next);
+});
+
 /* route 설정 */
 app.use('/api/login', login);
 app.use('/api/join', join);
