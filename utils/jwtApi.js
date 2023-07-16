@@ -15,7 +15,7 @@ exports.authjwt = (req, res, next, token) => {
         return res.status(status.JWT_TOKEN_VALID.code).send({
             code: status.JWT_TOKEN_VALID.code,
             message: status.JWT_TOKEN_VALID.message + "",
-            userId: userId
+            userId: req.decoded.userId
         });;
     }
     catch (error) {
@@ -38,16 +38,16 @@ exports.authjwt = (req, res, next, token) => {
 
 exports.checkRefreshTokenSignature = (req, res, next) => {
     try {
-        req.decoded = jwt.verify(token, process.env.REFRESH_SECRET_KEY);
+        req.decoded = jwt.verify(req.headers.refreshToken, process.env.REFRESH_SECRET_KEY);
         let token = this.createJwtAccessToken(req.decoded.userId);
-        res.cookie('token', token, COOKIE_OPTIONS);
+        res.cookie('token', token, this.COOKIE_OPTIONS);
         return res.status(status.JWT_TOKEN_VALID.code).send({
             code: status.JWT_TOKEN_VALID.code,
             message: status.JWT_TOKEN_VALID.message + "",
             userId: userId
         });;
     }
-    catch {
+    catch (error) {
         // 유효시간 만료
         if (error.name === 'TokenExpiredError') {
             return res.status(status.TOKEN_EXPIRED_ERROR.code).send({

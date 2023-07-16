@@ -7,8 +7,6 @@ const logger = require('../utils/logger');
 const status = require('../utils/httpStatus');
 // model
 const User = require('../models/user');
-//jwt
-const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 const jwtApi = require('../utils/jwtApi');
 
@@ -40,6 +38,7 @@ router.post('/', async function(req, res, next) {
     } );
 
     token = jwtApi.createJwtAccessToken(userId);
+    refreshToken = jwtApi.createJwtRefreshToken(userId);
   }
   
   res.cookie('token', token, jwtApi.COOKIE_OPTIONS);

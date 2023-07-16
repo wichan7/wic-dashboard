@@ -12,6 +12,7 @@ const mongoose = require('mongoose');
 //api
 const login = require('./routes/login');
 const join = require('./routes/join');
+const jwtApi = require('./utils/jwtApi');
 // define routes
 let viewRoutes = require('./routes/view');
 // logger
@@ -28,6 +29,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 /* health check */
 app.use('/healthz', (req, res, next) => {
   res.status(200).send("dashboard ok");
+});
+
+/* token refresh */
+app.post('/refresh', (req, res, next) => {
+  return jwtApi.checkRefreshTokenSignature(req, res, next);
 });
 
 /* route 설정 */
