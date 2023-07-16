@@ -1,5 +1,5 @@
 const cookie = require('cookie');
-const status = require('../utils/httpStatus');
+const status = require('./httpStatus');
 
 const jwt = require('jsonwebtoken');
 
@@ -30,7 +30,19 @@ exports.authjwt = (req, res, next, token) => {
 
 exports.checkTokenSignature = (req, res, next) => {
     try {
-        console.log(cookie.parse(req.headers.cookie).token);
+        if (!req.headers.cookie) {
+            return res.status(status.JSON_WEBTOKEN_ERROR.code).send({
+                code: status.JSON_WEBTOKEN_ERROR.code,
+                message: status.JSON_WEBTOKEN_ERROR.message,
+            });
+        }
+        var token = cookie.parse(req.headers.cookie).token;
+        if (!token) {
+            return res.status(status.JSON_WEBTOKEN_ERROR.code).send({
+                code: status.JSON_WEBTOKEN_ERROR.code,
+                message: status.JSON_WEBTOKEN_ERROR.message
+            });
+        }
         req.decoded = jwt.verify(cookie.parse(req.headers.cookie).token, process.env.SECRET_KEY);
         return res.status(status.JWT_TOKEN_VALID.code).send({
             code: status.JWT_TOKEN_VALID.code,
@@ -49,6 +61,20 @@ exports.checkTokenSignature = (req, res, next) => {
 
 exports.checkRefreshTokenSignature = (req, res, next) => {
     try {
+        if (!req.headers.cookie) {
+            return res.status(status.JSON_WEBTOKEN_ERROR.code).send({
+                code: status.JSON_WEBTOKEN_ERROR.code,
+                message: status.JSON_WEBTOKEN_ERROR.message,
+            });
+        }
+        var refreshToken = cookie.parse(req.headers.cookie).refreshToken;
+        if (!refreshToken) {
+            return res.status(status.JSON_WEBTOKEN_ERROR.code).send({
+                code: status.JSON_WEBTOKEN_ERROR.code,
+                message: status.JSON_WEBTOKEN_ERROR.message,
+                userId: req.decoded.userId
+            });
+        }
         req.decoded = jwt.verify(cookie.parse(req.headers.cookie).refreshToken, process.env.REFRESH_SECRET_KEY);
         let token = this.createJwtAccessToken(req.decoded.userId);
         res.cookie('token', token, this.COOKIE_OPTIONS);
@@ -102,9 +128,5 @@ exports.errorParser = (error) => {
     if (error.name === 'JsonWebTokenError') {
         return status.JSON_WEBTOKEN_ERROR;
     }
-    
-    var tmp;
-    tmp.code = status.UNEXPECTED_ERROR;
-    tmp.message = error.message;
-    return tmp;
+    return { code: status.UNEXPECTED_ERROR, message: error.message };
 };
