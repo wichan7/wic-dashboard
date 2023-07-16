@@ -10,7 +10,7 @@ const User = require('../models/user');
 //jwt
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
-const authjwt = require('./authjwt');
+const jwtApi = require('../utils/jwtApi');
 
 // 로그인
 router.post('/', async function(req, res, next) {
@@ -19,6 +19,7 @@ router.post('/', async function(req, res, next) {
 
   var cookies = {};
   var token = undefined;
+  var refreshToken = undefined;
   if (req.headers.cookie !== undefined) {
     cookies = cookie.parse(req.headers.cookie);
     token = cookies.token;
@@ -29,7 +30,7 @@ router.post('/', async function(req, res, next) {
   else if (!password)
     result = status.WRONG_PASSWORD_RULE;
   else if (token) 
-    return authjwt.authjwt(req, res, next);
+    return jwtApi.authjwt(req, res, next, token);
   else {
     await User.findOne({userId, password})
     .then( user => user ? result = status.SUCCESS : result = status.LOGIN_FAIL)
@@ -38,19 +39,12 @@ router.post('/', async function(req, res, next) {
       logger.error(err);
     } );
 
-    token = jwt.sign({
-        userId: userId,
-        url: 'dashboard.wichan.store/auth/login'
-    }, process.env.SECRET_KEY, {
-        expiresIn: '30m',
-        issuer: 'kgginam'
-    })
+    token = jwtApi.createJwtAccessToken(userId);
   }
-
-  //todo: secure의 false 테스트 완료 시 true로 변경
-  let cookieMaxLife = 60 * 60 * 1000; // 2시간
-  res.cookie('token', token, { httpOnly: true, secure: false, maxAge: cookieMaxLife });
-  res.cookie('userId', userId, { httpOnly: true, secure: false, maxAge: cookieMaxLife });
+  
+  res.cookie('token', token, jwtApi.COOKIE_OPTIONS);
+  res.cookie('userId', userId, jwtApi.COOKIE_OPTIONS);
+  res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, maxAge: jwtApi.COOKIE_MAX_LIFE_REFRESH, path: '/' });
 
   return res.status(result.code).send({
     code: result.code,
