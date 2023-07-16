@@ -71,8 +71,7 @@ exports.checkRefreshTokenSignature = (req, res, next) => {
         if (!refreshToken) {
             return res.status(status.JSON_WEBTOKEN_ERROR.code).send({
                 code: status.JSON_WEBTOKEN_ERROR.code,
-                message: status.JSON_WEBTOKEN_ERROR.message,
-                userId: req.decoded.userId
+                message: status.JSON_WEBTOKEN_ERROR.message
             });
         }
         req.decoded = jwt.verify(cookie.parse(req.headers.cookie).refreshToken, process.env.REFRESH_SECRET_KEY);
